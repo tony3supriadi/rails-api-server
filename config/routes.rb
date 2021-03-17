@@ -5,5 +5,6 @@ Rails.application.routes.draw do
     post '/books' => 'book#store'
     get '/books/:id' => 'book#show'
     put '/books/:id' => 'book#update'
+    delete '/books/:id' => 'book#destroy'
   end
 end

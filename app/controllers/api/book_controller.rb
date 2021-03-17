@@ -64,6 +64,24 @@ class Api::BookController < ApplicationController
         end
     end
 
+    # Menghapus data buku
+    # DELETE: /api/books/:id
+    def destroy
+        @book = Book.find_by_id(params[:id])
+        if @book.destroy
+            render json: {
+                type: 'success',
+                result: {}
+            }, status: :created
+        else 
+            render json: {
+                type: 'failed',
+                message: 'Hapus buku :id => ' + params[:id] + ' gagal.',
+                result: {}
+            }, status: :bad_request
+        end
+    end
+
     # Private method untuk kebutuhan controllers
     private 
 
