@@ -3,5 +3,6 @@ Rails.application.routes.draw do
   namespace 'api' do
     get '/books' => 'book#index'
     post '/books' => 'book#create'
+    get '/books/:id' => 'book#show'
   end
 end
