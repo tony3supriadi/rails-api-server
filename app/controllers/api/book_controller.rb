@@ -12,7 +12,7 @@ class Api::BookController < ApplicationController
 
     # Membuat data buku baru
     # POST: /api/books
-    def create
+    def store
         @book = Book.new(book_params)
         if @book.save
             render json: {
@@ -40,9 +40,27 @@ class Api::BookController < ApplicationController
         else
             render json: {
                 type: 'failed',
-                message: 'Buku #id:' + params[:id] + ' tidak ditemukan',
+                message: 'Buku :id => ' + params[:id] + ' tidak ditemukan',
                 result: {},
             }, status: :not_found
+        end
+    end
+
+    # Mengubah data buku berdasarkan :id
+    # PUT: /api/books/:id
+    def update
+        @book = Book.find_by_id(params[:id])
+        if @book.update(book_params)
+            render json: {
+                type: 'success',
+                result: @book
+            }, status: :created
+        else
+            render json: {
+                type: 'failed',
+                message: 'Edit buku :id => ' + params[:id] + ' gagal.',
+                result: {}
+            }, status: :bad_request
         end
     end
 
