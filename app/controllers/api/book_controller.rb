@@ -22,7 +22,7 @@ class Api::BookController < ApplicationController
         else
             render json: {
                 type: 'failed',
-                message: 'Gagal menambahkan data buku.',
+                message: @book.errors,
                 result: {},
             }, status: :bad_request
         end
@@ -40,7 +40,7 @@ class Api::BookController < ApplicationController
         else
             render json: {
                 type: 'failed',
-                message: 'Buku :id => ' + params[:id] + ' tidak ditemukan',
+                message: 'data with id:' + params[:id] + ' not found',
                 result: {},
             }, status: :not_found
         end
@@ -50,17 +50,26 @@ class Api::BookController < ApplicationController
     # PUT: /api/books/:id
     def update
         @book = Book.find_by_id(params[:id])
-        if @book.update(book_params)
-            render json: {
-                type: 'success',
-                result: @book
-            }, status: :created
+
+        if @book.present?
+            if @book.update(book_params)
+                render json: {
+                    type: 'success',
+                    result: @book
+                }, status: :created
+            else
+                render json: {
+                    type: 'failed',
+                    message: @book.errors,
+                    result: {}
+                }, status: :bad_request
+            end
         else
             render json: {
                 type: 'failed',
-                message: 'Edit buku :id => ' + params[:id] + ' gagal.',
-                result: {}
-            }, status: :bad_request
+                message: 'data with id:' + params[:id] + ' not found',
+                result: {},
+            }, status: :not_found
         end
     end
 
@@ -68,17 +77,25 @@ class Api::BookController < ApplicationController
     # DELETE: /api/books/:id
     def destroy
         @book = Book.find_by_id(params[:id])
-        if @book.destroy
-            render json: {
-                type: 'success',
-                result: {}
-            }, status: :created
-        else 
+        if @book.present?
+            if @book.destroy
+                render json: {
+                    type: 'success',
+                    result: {}
+                }, status: :created
+            else 
+                render json: {
+                    type: 'failed',
+                    message: @book.errors,
+                    result: {}
+                }, status: :bad_request
+            end
+        else
             render json: {
                 type: 'failed',
-                message: 'Hapus buku :id => ' + params[:id] + ' gagal.',
-                result: {}
-            }, status: :bad_request
+                message: 'data with id:' + params[:id] + ' not found',
+                result: {},
+            }, status: :not_found
         end
     end
 
